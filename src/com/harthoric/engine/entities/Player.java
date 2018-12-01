@@ -11,7 +11,7 @@ import com.harthoric.engine.toolbox.handler.MouseCursorHandler;
 
 public class Player extends Entity {
 
-	private static final float RUN_SPEED = 20;
+	private static float runSpeed = 20;
 	private static final float TURN_SPEED = 160;
 	private static final float GRAVITY = -50;
 	private static final float JUMP_POWER = 30;
@@ -36,10 +36,8 @@ public class Player extends Entity {
 //		super.increaseRotation(0, currentTurnSpeed * DisplayManager.getFrameTimeSeconds(), 0);
 		super.setRotY((float) mouseHandler.getX());
 		float distance = currentSpeed * DisplayManager.getFrameTimeSeconds();
-		System.out.println(Math.toRadians(super.getRotY()));
 		float dx = (float) (distance * Math.sin(Math.toRadians(super.getRotY() + angle)));
 		float dz = (float) (distance * Math.cos(Math.toRadians(super.getRotY() + angle)));
-		System.out.println(distance);
 		super.increasePosition(dx, 0, dz);
 		upwardsSpeed += GRAVITY * DisplayManager.getFrameTimeSeconds();
 		super.increasePosition(0, upwardsSpeed * DisplayManager.getFrameTimeSeconds(), 0);
@@ -63,37 +61,43 @@ public class Player extends Entity {
 		var sDown = KeyboardHandler.isKeyDown(GLFW.GLFW_KEY_S);
 		var dDown = KeyboardHandler.isKeyDown(GLFW.GLFW_KEY_D);
 		var aDown = KeyboardHandler.isKeyDown(GLFW.GLFW_KEY_A);
+		var shiftDown = KeyboardHandler.isKeyDown(GLFW.GLFW_KEY_LEFT_SHIFT);
 
+		if (shiftDown)
+			runSpeed = 40;
+		else
+			runSpeed = 20;
+		
 		if (wDown && aDown) {
 			angle = 45;
-			this.currentSpeed = RUN_SPEED;
+			this.currentSpeed = runSpeed;
 		} else if (wDown && dDown) {
 			angle = -45;
-			this.currentSpeed = RUN_SPEED;
+			this.currentSpeed = runSpeed;
 		} else if (sDown && aDown) {
 			angle = -45;
-			this.currentSpeed = -RUN_SPEED;
+			this.currentSpeed = -runSpeed;
 		} else if (sDown && dDown) {
 			angle = 45;
-			this.currentSpeed = -RUN_SPEED;
+			this.currentSpeed = -runSpeed;
 		} else {
 
 			if (wDown) {
 				angle = 0;
-				this.currentSpeed = RUN_SPEED;
+				this.currentSpeed = runSpeed;
 			} else if (sDown) {
 				angle = 0;
-				this.currentSpeed = -RUN_SPEED;
+				this.currentSpeed = -runSpeed;
 			} else {
 				this.currentSpeed = 0;
 			}
 
 			if (dDown) {
 				angle = 90;
-				this.currentSpeed = -RUN_SPEED;
+				this.currentSpeed = -runSpeed;
 			} else if (aDown) {
 				angle = 90;
-				this.currentSpeed = RUN_SPEED;
+				this.currentSpeed = runSpeed;
 			} else {
 				this.currentTurnSpeed = 0;
 			}

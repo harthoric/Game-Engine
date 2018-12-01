@@ -8,9 +8,12 @@ import static org.lwjgl.glfw.GLFW.glfwTerminate;
 import java.util.Calendar;
 
 import org.lwjgl.glfw.GLFW;
+import org.lwjgl.glfw.GLFWCursorPosCallback;
 import org.lwjgl.glfw.GLFWErrorCallback;
 import org.lwjgl.opengl.GL;
 import org.lwjgl.opengl.GL11;
+
+import com.harthoric.engine.toolbox.handler.MouseCursorHandler;
 
 public class DisplayManager {
 
@@ -20,6 +23,7 @@ public class DisplayManager {
 	private static float delta;
 
 	private GLFWErrorCallback errorCallback;
+	private GLFWCursorPosCallback cursorPos;
 
 	private long window;
 
@@ -43,6 +47,7 @@ public class DisplayManager {
 		setErrorCallback();
 
 		GLFW.glfwMakeContextCurrent(window);
+		GLFW.glfwSetCursorPosCallback(window, cursorPos = new MouseCursorHandler());
 		GL.createCapabilities();
 		GL11.glViewport(0, 0, WIDTH, HEIGHT);
 		lastFrameTime = getCurrentTime();
@@ -85,6 +90,10 @@ public class DisplayManager {
 	
 	private static long getCurrentTime() {
 		return Calendar.getInstance().getTimeInMillis();
+	}
+	
+	public GLFWCursorPosCallback getCursorPos() {
+		return cursorPos;
 	}
 
 }

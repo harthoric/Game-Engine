@@ -14,5 +14,9 @@ public class MouseScrollHandler extends GLFWScrollCallback {
 	public float getScrollVelocity() {
 		return (float) scrollVelocity;
 	}
+	
+	public void setScrollVelocity(double velocity) {
+		scrollVelocity = velocity;
+	}
 
 }
