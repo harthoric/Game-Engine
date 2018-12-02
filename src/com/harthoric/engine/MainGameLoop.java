@@ -114,31 +114,30 @@ public class MainGameLoop {
 //		GuiTexture gui = new GuiTexture(loader.loadTexture("Textures/island-height-transparent"),
 //				new Vector3f(0.5f, 0.5f, 0.0f), 0.25f);
 
-		GuiRenderer guiRenderer = new GuiRenderer(loader);
+//		GuiRenderer guiRenderer = new GuiRenderer(loader);
 
-		MousePicker picker = new MousePicker(camera, renderer.getProjectionMatrix(), terrain);
-
-		WaterShader waterShader = new WaterShader();
-		WaterRenderer waterRenderer = new WaterRenderer(loader, waterShader, renderer.getProjectionMatrix());
-		List<WaterTile> waters = new ArrayList<WaterTile>();
-		waters.add(new WaterTile(0, -0, -15));
-
+//		MousePicker picker = new MousePicker(camera, renderer.getProjectionMatrix(), terrain);
+		
 		WaterFrameBuffers fbos = new WaterFrameBuffers();
+		WaterShader waterShader = new WaterShader();
+		WaterRenderer waterRenderer = new WaterRenderer(loader, waterShader, renderer.getProjectionMatrix(), fbos);
+		List<WaterTile> waters = new ArrayList<WaterTile>();
+		waters.add(new WaterTile(0, 0, -15));
 
-		GuiTexture reflection = new GuiTexture(fbos.getReflectionTexture(), new Vector3f(-0.5f, 0.5f, 0.0f), 0.25f);
-		GuiTexture refraction = new GuiTexture(fbos.getRefractionTexture(), new Vector3f(0.5f, 0.5f, 0.0f), 0.25f);
-		guis.add(reflection);
-		guis.add(refraction);
+//		GuiTexture reflection = new GuiTexture(fbos.getReflectionTexture(), new Vector3f(-0.5f, 0.5f, 0.0f), 0.25f);
+//		GuiTexture refraction = new GuiTexture(fbos.getRefractionTexture(), new Vector3f(0.5f, 0.5f, 0.0f), 0.25f);
+//		guis.add(reflection);
+//		guis.add(refraction);
 		
 		while (!glfwWindowShouldClose(displayManager.getWindow())) {
 			camera.move();
 			player.move(terrain);
 
-			picker.update();
+//			picker.update();
 			
 			GL11.glEnable(GL30.GL_CLIP_DISTANCE0);
 			
-			Vector3f terrainPoint = picker.getCurrentTerrainPoint();
+//			Vector3f terrainPoint = picker.getCurrentTerrainPoint();
 
 			fbos.bindReflectionFrameBuffer();
 			float distance = 2 * (camera.getPosition().y + 15);
@@ -146,16 +145,7 @@ public class MainGameLoop {
 			camera.invertPitch();
 			renderer.processEntity(player);
 			entity.increaseRotation(0, 1, 0);
-			if (terrainPoint != null && Camera.key == 1) {
-				allDragons.get(0).setPosition(terrainPoint);
-				light.setPosition(new Vector3f(terrainPoint.x, terrainPoint.y + 15, terrainPoint.z));
-			}
 
-			for (Entity dragon : allDragons) {
-				renderer.processEntity(dragon);
-			}
-
-			camera.move();
 			renderer.processTerrain(terrain);
 			renderer.render(lights, camera, new Vector4f(0, 1, 0, 15));
 			
@@ -165,16 +155,7 @@ public class MainGameLoop {
 			fbos.bindRefractionFrameBuffer();
 			renderer.processEntity(player);
 			entity.increaseRotation(0, 1, 0);
-			if (terrainPoint != null && Camera.key == 1) {
-				allDragons.get(0).setPosition(terrainPoint);
-				light.setPosition(new Vector3f(terrainPoint.x, terrainPoint.y + 15, terrainPoint.z));
-			}
 
-			for (Entity dragon : allDragons) {
-				renderer.processEntity(dragon);
-			}
-
-			camera.move();
 			renderer.processTerrain(terrain);
 			renderer.render(lights, camera, new Vector4f(0, -1, 0, -15));
 			fbos.unbindCurrentFrameBuffer();
@@ -182,22 +163,21 @@ public class MainGameLoop {
 			GL11.glDisable(GL30.GL_CLIP_DISTANCE0);
 			renderer.processEntity(player);
 			entity.increaseRotation(0, 1, 0);
-			if (terrainPoint != null && Camera.key == 1) {
-				allDragons.get(0).setPosition(terrainPoint);
-				light.setPosition(new Vector3f(terrainPoint.x, terrainPoint.y + 15, terrainPoint.z));
-			}
+//			if (terrainPoint != null && Camera.key == 1) {
+//				allDragons.get(0).setPosition(terrainPoint);
+//				light.setPosition(new Vector3f(terrainPoint.x, terrainPoint.y + 15, terrainPoint.z));
+//			}
 
 			for (Entity dragon : allDragons) {
 				renderer.processEntity(dragon);
 			}
 
-			camera.move();
 			renderer.processTerrain(terrain);
 			renderer.render(lights, camera, new Vector4f(0, -1, 0, 150));
 
-			waterRenderer.render(waters, camera);
+			waterRenderer.render(waters, camera, light);
 
-			guiRenderer.render(guis);
+//			guiRenderer.render(guis);
 			displayManager.updateDisplay();
 		}
 
