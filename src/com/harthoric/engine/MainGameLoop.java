@@ -140,6 +140,9 @@ public class MainGameLoop {
 //			Vector3f terrainPoint = picker.getCurrentTerrainPoint();
 
 			fbos.bindReflectionFrameBuffer();
+			for (Entity dragon : allDragons) {
+				renderer.processEntity(dragon);
+			}
 			float distance = 2 * (camera.getPosition().y + 15);
 			camera.getPosition().y -= distance;
 			camera.invertPitch();
@@ -153,6 +156,9 @@ public class MainGameLoop {
 			camera.invertPitch();
 			
 			fbos.bindRefractionFrameBuffer();
+			for (Entity dragon : allDragons) {
+				renderer.processEntity(dragon);
+			}
 			renderer.processEntity(player);
 			entity.increaseRotation(0, 1, 0);
 
